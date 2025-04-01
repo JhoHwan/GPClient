@@ -10,7 +10,7 @@ using SessionRef = shared_ptr<Session>;
 using SendBufferRef = shared_ptr<SendBuffer>;
 #endif
 
-using PacketHandlerFunc = std::function<bool(SessionRef&, BYTE*, int32)>;
+using PacketHandlerFunc = std::function<bool(SessionRef, BYTE*, int32)>;
 extern PacketHandlerFunc GPacketHandler[UINT16_MAX];
 
 enum : uint16
@@ -24,15 +24,17 @@ enum : uint16
 	PKT_CS_CHAT = 1006,
 	PKT_SC_CHAT = 1007,
 	PKT_CS_REQUEST_MOVE = 1008,
+	PKT_SC_BROADCAST_MOVE = 1009,
 };
 
 // Custom Handlers
-bool Handle_INVALID(SessionRef& session, BYTE* buffer, int32 len);
-bool Handle_SC_ENTER_GAME(SessionRef& session, Protocol::SC_ENTER_GAME& pkt);
-bool Handle_SC_LEAVE_GAME(SessionRef& session, Protocol::SC_LEAVE_GAME& pkt);
-bool Handle_SC_SPAWN(SessionRef& session, Protocol::SC_SPAWN& pkt);
-bool Handle_SC_DESPAWN(SessionRef& session, Protocol::SC_DESPAWN& pkt);
-bool Handle_SC_CHAT(SessionRef& session, Protocol::SC_CHAT& pkt);
+bool Handle_INVALID(SessionRef session, BYTE* buffer, int32 len);
+bool Handle_SC_ENTER_GAME(SessionRef session, Protocol::SC_ENTER_GAME& pkt);
+bool Handle_SC_LEAVE_GAME(SessionRef session, Protocol::SC_LEAVE_GAME& pkt);
+bool Handle_SC_SPAWN(SessionRef session, Protocol::SC_SPAWN& pkt);
+bool Handle_SC_DESPAWN(SessionRef session, Protocol::SC_DESPAWN& pkt);
+bool Handle_SC_CHAT(SessionRef session, Protocol::SC_CHAT& pkt);
+bool Handle_SC_BROADCAST_MOVE(SessionRef session, Protocol::SC_BROADCAST_MOVE& pkt);
 
 class ClientPacketHandler
 {
@@ -41,14 +43,15 @@ public:
 	{
 		for (int32 i = 0; i < UINT16_MAX; i++)
 			GPacketHandler[i] = Handle_INVALID;
-		GPacketHandler[PKT_SC_ENTER_GAME] = [](SessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::SC_ENTER_GAME>(Handle_SC_ENTER_GAME, session, buffer, len); };
-		GPacketHandler[PKT_SC_LEAVE_GAME] = [](SessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::SC_LEAVE_GAME>(Handle_SC_LEAVE_GAME, session, buffer, len); };
-		GPacketHandler[PKT_SC_SPAWN] = [](SessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::SC_SPAWN>(Handle_SC_SPAWN, session, buffer, len); };
-		GPacketHandler[PKT_SC_DESPAWN] = [](SessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::SC_DESPAWN>(Handle_SC_DESPAWN, session, buffer, len); };
-		GPacketHandler[PKT_SC_CHAT] = [](SessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::SC_CHAT>(Handle_SC_CHAT, session, buffer, len); };
+		GPacketHandler[PKT_SC_ENTER_GAME] = [](SessionRef session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::SC_ENTER_GAME>(Handle_SC_ENTER_GAME, session, buffer, len); };
+		GPacketHandler[PKT_SC_LEAVE_GAME] = [](SessionRef session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::SC_LEAVE_GAME>(Handle_SC_LEAVE_GAME, session, buffer, len); };
+		GPacketHandler[PKT_SC_SPAWN] = [](SessionRef session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::SC_SPAWN>(Handle_SC_SPAWN, session, buffer, len); };
+		GPacketHandler[PKT_SC_DESPAWN] = [](SessionRef session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::SC_DESPAWN>(Handle_SC_DESPAWN, session, buffer, len); };
+		GPacketHandler[PKT_SC_CHAT] = [](SessionRef session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::SC_CHAT>(Handle_SC_CHAT, session, buffer, len); };
+		GPacketHandler[PKT_SC_BROADCAST_MOVE] = [](SessionRef session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::SC_BROADCAST_MOVE>(Handle_SC_BROADCAST_MOVE, session, buffer, len); };
 	}
 
-	static bool HandlePacket(SessionRef& session, BYTE* buffer, int32 len)
+	static bool HandlePacket(SessionRef session, BYTE* buffer, int32 len)
 	{
 		PacketHeader* header = reinterpret_cast<PacketHeader*>(buffer);
 		return GPacketHandler[header->id](session, buffer, len);
@@ -60,7 +63,7 @@ public:
 
 private:
 	template<typename PacketType, typename ProcessFunc>
-	static bool HandlePacket(ProcessFunc func, SessionRef& session, BYTE* buffer, int32 len)
+	static bool HandlePacket(ProcessFunc func, SessionRef session, BYTE* buffer, int32 len)
 	{
 		PacketType pkt;
 		if (pkt.ParseFromArray(buffer + sizeof(PacketHeader), len - sizeof(PacketHeader)) == false)

@@ -10,6 +10,8 @@
 /**
  * 
  */
+class AMyPlayer;
+
 UCLASS()
 class GP_API UGPGameInstance : public UGameInstance
 {
@@ -30,9 +32,10 @@ public:
 	virtual void Shutdown() override;
 
 public:
-	void HandleSpawn(const Protocol::PlayerInfo& PlayerInfo);
+	void HandleSpawn(const Protocol::ObjectInfo& PlayerInfo);
 	void HandleSpawn(const Protocol::SC_ENTER_GAME& EnterGame);
 	void HandleSpawn(const Protocol::SC_SPAWN& SpawnGame);
+
 
 public:
 	class FSocket* Socket;
@@ -41,9 +44,13 @@ public:
 
 	TSharedPtr<class PacketSession> GameServerSession;
 
+	AMyPlayer* GetPlayerWithId(uint64 Id);
+	AMyPlayer* GetMyPlayer();
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<AActor> PlayerClass;
 
-	TMap<uint32, AActor*> Players;
+	TMap<uint32, AMyPlayer*> Players;
+	AMyPlayer* MyPlayer;
 };

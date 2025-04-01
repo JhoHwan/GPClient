@@ -1,16 +1,17 @@
 #include "ClientPacketHandler.h"
 #include "PacketSession.h"
 #include "GPGameInstance.h"
+#include "MyPlayer.h"
 
 PacketHandlerFunc GPacketHandler[UINT16_MAX];
 
 
-bool Handle_INVALID(SessionRef& session, BYTE* buffer, int32 len)
+bool Handle_INVALID(SessionRef session, BYTE* buffer, int32 len)
 {
 	return true;
 }
 
-bool Handle_SC_ENTER_GAME(SessionRef& session, Protocol::SC_ENTER_GAME& pkt)
+bool Handle_SC_ENTER_GAME(SessionRef session, Protocol::SC_ENTER_GAME& pkt)
 {
 	if (pkt.success() == false) return false;
 
@@ -22,12 +23,12 @@ bool Handle_SC_ENTER_GAME(SessionRef& session, Protocol::SC_ENTER_GAME& pkt)
 	return true;
 }
 
-bool Handle_SC_LEAVE_GAME(SessionRef& session, Protocol::SC_LEAVE_GAME& pkt)
+bool Handle_SC_LEAVE_GAME(SessionRef session, Protocol::SC_LEAVE_GAME& pkt)
 {
 	return true;
 }
 
-bool Handle_SC_SPAWN(SessionRef& session, Protocol::SC_SPAWN& pkt)
+bool Handle_SC_SPAWN(SessionRef session, Protocol::SC_SPAWN& pkt)
 {
 	auto* GameInstance = Cast<UGPGameInstance>(GWorld->GetGameInstance());
 	if (GameInstance == nullptr) return false;
@@ -39,14 +40,28 @@ bool Handle_SC_SPAWN(SessionRef& session, Protocol::SC_SPAWN& pkt)
 	return true;
 }
 
-bool Handle_SC_DESPAWN(SessionRef& session, Protocol::SC_DESPAWN& pkt)
+bool Handle_SC_DESPAWN(SessionRef session, Protocol::SC_DESPAWN& pkt)
 {
 	return true;
 }
 
-bool Handle_SC_CHAT(SessionRef& session, Protocol::SC_CHAT& pkt)
+bool Handle_SC_CHAT(SessionRef session, Protocol::SC_CHAT& pkt)
 {
 	auto s = pkt.msg();
+
+	return true;
+}
+
+bool Handle_SC_BROADCAST_MOVE(SessionRef session, Protocol::SC_BROADCAST_MOVE& pkt)
+{
+	auto* GameInstance = Cast<UGPGameInstance>(GWorld->GetGameInstance());
+
+	for (auto& info : pkt.players())
+	{
+		auto* Player = GameInstance->GetPlayerWithId(info.objectid());
+		FVector pos(info.x(), info.y(), 0);
+		Player->SetTargetLocation(pos);
+	}
 
 	return true;
 }

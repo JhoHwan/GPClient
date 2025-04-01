@@ -3,6 +3,9 @@
 
 #include "MyPlayer.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "GPGameInstance.h"
+#include "ClientPacketHandler.h"
+#include "Protocol.pb.h"
 
 // Sets default values
 AMyPlayer::AMyPlayer()
@@ -24,49 +27,55 @@ void AMyPlayer::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-    if (PathPoints.Num() > 0 && CurrentPathIndex < PathPoints.Num())
+    if (bIsMoving == true)
     {
-        MoveAlongPath(DeltaTime);
+        MoveToTarget(DeltaTime);
     }
 }
 
-void AMyPlayer::SetPath(const TArray<FVector>& Path)
+void AMyPlayer::RequestMove(FVector Location)
 {
-	if (Path.Num() == 0)
-	{
-		return;
-	}
+    UGPGameInstance* GameInstance = Cast<UGPGameInstance>(GetGameInstance());
 
-	bIsMoving = true;
-	PathPoints = Path;
-	CurrentPathIndex = 0;
+    Protocol::CS_REQUEST_MOVE pkt;
+    pkt.set_playerid(PlayerId);
+    pkt.set_x(Location.X);
+    pkt.set_y(Location.Y);
+
+    GameInstance->SendPakcet(ClientPacketHandler::MakeSendBuffer(pkt));
 }
 
-void AMyPlayer::MoveAlongPath(float DeltaTime)
+void AMyPlayer::SetTargetLocation(FVector Location)
+{
+    bIsMoving = true;
+    Location.Z = GetActorLocation().Z;
+    TargetLocation = Location;
+}
+
+
+void AMyPlayer::MoveToTarget(float DeltaTime)
 {
     FVector CurrentLocation = GetActorLocation();
-    FVector TargetLocation = PathPoints[CurrentPathIndex];
+    
+    FVector MoveDirection = (TargetLocation - CurrentLocation);
+    float DistanceToTarget = MoveDirection.Size2D();
+    MoveDirection = MoveDirection.GetSafeNormal2D();
 
-    FVector Direction = (TargetLocation - CurrentLocation).GetSafeNormal2D();
-    FVector NewLocation = CurrentLocation + Direction * MoveSpeed * DeltaTime;
+    float MoveDistance = (MoveDirection * MoveSpeed * DeltaTime).Size2D();
+    MoveDistance = FMath::Min(MoveDistance, DistanceToTarget);
 
-    // 이동 (Root Motion이 없으면 SetActorLocation 사용 가능)
+    FVector NewLocation = CurrentLocation + MoveDirection * MoveDistance;
+
+    // 이동
     SetActorLocation(NewLocation);
 
     // 회전
-    FRotator TargetRotation = Direction.Rotation();
+    FRotator TargetRotation = MoveDirection.Rotation();
     SetActorRotation(TargetRotation);
-
-    float DistanceToTarget = FVector::Dist2D(NewLocation, TargetLocation);
 
     if (DistanceToTarget <= AcceptanceRadius)
     {
-        CurrentPathIndex++;
-
-        if (CurrentPathIndex >= PathPoints.Num())
-        {
-			bIsMoving = false;
-        }
+        bIsMoving = false;
     }
 }
 

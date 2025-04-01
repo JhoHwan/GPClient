@@ -7,6 +7,7 @@
 #include "Serialization/ArrayWriter.h"
 #include "SocketSubsystem.h"
 #include "PacketSession.h"
+#include "MyPlayer.h"
 
 #include "Protocol.pb.h"
 #include "ClientPacketHandler.h"
@@ -90,14 +91,14 @@ void UGPGameInstance::Shutdown()
 	DisconnectFromGameServer();
 }
 
-void UGPGameInstance::HandleSpawn(const Protocol::PlayerInfo& PlayerInfo)
+void UGPGameInstance::HandleSpawn(const Protocol::ObjectInfo& PlayerInfo)
 {
 	if (Socket == nullptr || GameServerSession == nullptr) return;
 
 	auto* World = GetWorld();
 	if (World == nullptr) return;
 
-	const uint32 ObjectId = PlayerInfo.object_id();
+	const uint32 ObjectId = PlayerInfo.objectid();
 	if (Players.Find(ObjectId) != nullptr)
 		return;
 
@@ -109,25 +110,41 @@ void UGPGameInstance::HandleSpawn(const Protocol::PlayerInfo& PlayerInfo)
 	AActor* Actor = World->SpawnActor<AActor>(PlayerClass, SpawnLocation, FRotator::ZeroRotator, SpawnParams);
 	if (Actor == nullptr) return;
 
-	Players.Add(PlayerInfo.object_id(), Actor);
+	AMyPlayer* player = Cast<AMyPlayer>(Actor);
+	if (player == nullptr) return;
+	player->SetPlayerId(ObjectId);
+
+	Players.Add(PlayerInfo.objectid(), player);
 }
 
 void UGPGameInstance::HandleSpawn(const Protocol::SC_ENTER_GAME& EnterGame)
 {
 	HandleSpawn(EnterGame.player());
 
-	if (Players.Find(EnterGame.player().object_id()) == nullptr) return;
-	AActor* player = Players[EnterGame.player().object_id()];
+	if (Players.Find(EnterGame.player().objectid()) == nullptr) return;
+	AActor* Player = Players[EnterGame.player().objectid()];
 	
 	APlayerController* PC = GetWorld()->GetFirstPlayerController();
 	if (PC == nullptr) return;
 
-	APawn* PawnToPossess = Cast<APawn>(player);
-	if (PawnToPossess == nullptr) return;
+	MyPlayer = Cast<AMyPlayer>(Player);
+	if (MyPlayer == nullptr) return;
 
-	PC->Possess(PawnToPossess);
+	PC->Possess(MyPlayer);
 }
 
 void UGPGameInstance::HandleSpawn(const Protocol::SC_SPAWN& SpawnGame)
 {
+}
+
+AMyPlayer* UGPGameInstance::GetPlayerWithId(uint64 Id)
+{
+	if (Players.Find(Id) == nullptr)
+		return nullptr;
+	return Players[Id];
+}
+
+AMyPlayer* UGPGameInstance::GetMyPlayer()
+{
+	return MyPlayer;
 }

@@ -19,15 +19,22 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-
-
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UFUNCTION(BlueprintCallable)
-	void SetPath(const TArray<FVector>& Path);
+	FORCEINLINE void SetPlayerId(uint64 Id) { PlayerId = Id; }
 
+	UFUNCTION(BlueprintCallable)
+	void RequestMove(FVector Location);
+
+	void SetTargetLocation(FVector Location);
+
+private:
+	void MoveToTarget(float DeltaTime);
+
+
+public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float AcceptanceRadius = 5.0f;
 
@@ -38,11 +45,8 @@ public:
 	bool bIsMoving = false;
 
 private:
-	void MoveAlongPath(float DeltaTime);
-
 	UPROPERTY()
-	TArray<FVector> PathPoints;
+	FVector TargetLocation;
 
-	int32 CurrentPathIndex = 0;
-
+	uint64 PlayerId;
 };
