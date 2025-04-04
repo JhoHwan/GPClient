@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Network\Protocol.pb.h"
+
 #include "MyPlayer.generated.h"
 
 UCLASS()
@@ -28,7 +30,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void RequestMove(FVector Location);
 
-	void SetTargetLocation(FVector Location);
+	void SetTargetLocation(const Protocol::MoveInfo& info);
 
 private:
 	void MoveToTarget(float DeltaTime);
@@ -36,7 +38,7 @@ private:
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float AcceptanceRadius = 5.0f;
+	float AcceptanceRadius = 0.01f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float MoveSpeed = 600.0f;
@@ -45,8 +47,9 @@ public:
 	bool bIsMoving = false;
 
 private:
-	UPROPERTY()
-	FVector TargetLocation;
+	Protocol::MoveInfo MoveInfo;
 
 	uint64 PlayerId;
+
+	Protocol::PLAYER_STATE State = Protocol::PLAYER_STATE::PLAYER_STATE_IDLE;
 };

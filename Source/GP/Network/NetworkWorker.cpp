@@ -35,6 +35,7 @@ uint32 RecvWorker::Run()
 				Session->RecvPacketQueue.Enqueue(Packet);
 			}
 		}
+		FPlatformProcess::Sleep(0);
 	}
 
 	return 0;
@@ -140,6 +141,8 @@ uint32 SendWorker::Run()
 				SendPacket(SendBuffer);
 			}
 		}
+
+		FPlatformProcess::Sleep(0);
 	}
 
 	return 0;

@@ -139,7 +139,7 @@ struct CS_REQUEST_MOVEDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 CS_REQUEST_MOVEDefaultTypeInternal _CS_REQUEST_MOVE_default_instance_;
 PROTOBUF_CONSTEXPR SC_BROADCAST_MOVE::SC_BROADCAST_MOVE(
     ::_pbi::ConstantInitialized): _impl_{
-    /*decltype(_impl_.players_)*/{}
+    /*decltype(_impl_.objects_)*/{}
   , /*decltype(_impl_._cached_size_)*/{}} {}
 struct SC_BROADCAST_MOVEDefaultTypeInternal {
   PROTOBUF_CONSTEXPR SC_BROADCAST_MOVEDefaultTypeInternal()
@@ -226,7 +226,7 @@ const uint32_t TableStruct_Protocol_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::Protocol::SC_BROADCAST_MOVE, _impl_.players_),
+  PROTOBUF_FIELD_OFFSET(::Protocol::SC_BROADCAST_MOVE, _impl_.objects_),
 };
 static const ::_pbi::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   { 0, -1, -1, sizeof(::Protocol::CS_ENTER_GAME)},
@@ -264,9 +264,9 @@ const char descriptor_table_protodef_Protocol_2eproto[] PROTOBUF_SECTION_VARIABL
   "\022\021\n\tobjectIds\030\001 \003(\004\"\026\n\007CS_CHAT\022\013\n\003msg\030\001 "
   "\001(\t\"(\n\007SC_CHAT\022\020\n\010playerId\030\001 \001(\004\022\013\n\003msg\030"
   "\002 \001(\t\"9\n\017CS_REQUEST_MOVE\022\020\n\010playerId\030\001 \001"
-  "(\004\022\t\n\001x\030\002 \001(\001\022\t\n\001y\030\003 \001(\001\":\n\021SC_BROADCAST"
-  "_MOVE\022%\n\007players\030\001 \003(\0132\024.Protocol.Object"
-  "Infob\006proto3"
+  "(\004\022\t\n\001x\030\002 \001(\001\022\t\n\001y\030\003 \001(\001\"8\n\021SC_BROADCAST"
+  "_MOVE\022#\n\007objects\030\001 \003(\0132\022.Protocol.MoveIn"
+  "fob\006proto3"
   ;
 static const ::_pbi::DescriptorTable* const descriptor_table_Protocol_2eproto_deps[2] = {
   &::descriptor_table_Enum_2eproto,
@@ -274,7 +274,7 @@ static const ::_pbi::DescriptorTable* const descriptor_table_Protocol_2eproto_de
 };
 static ::_pbi::once_flag descriptor_table_Protocol_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_Protocol_2eproto = {
-    false, false, 452, descriptor_table_protodef_Protocol_2eproto,
+    false, false, 450, descriptor_table_protodef_Protocol_2eproto,
     "Protocol.proto",
     &descriptor_table_Protocol_2eproto_once, descriptor_table_Protocol_2eproto_deps, 2, 10,
     schemas, file_default_instances, TableStruct_Protocol_2eproto::offsets,
@@ -1718,8 +1718,8 @@ class SC_BROADCAST_MOVE::_Internal {
  public:
 };
 
-void SC_BROADCAST_MOVE::clear_players() {
-  _impl_.players_.Clear();
+void SC_BROADCAST_MOVE::clear_objects() {
+  _impl_.objects_.Clear();
 }
 SC_BROADCAST_MOVE::SC_BROADCAST_MOVE(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
@@ -1731,7 +1731,7 @@ SC_BROADCAST_MOVE::SC_BROADCAST_MOVE(const SC_BROADCAST_MOVE& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
   SC_BROADCAST_MOVE* const _this = this; (void)_this;
   new (&_impl_) Impl_{
-      decltype(_impl_.players_){from._impl_.players_}
+      decltype(_impl_.objects_){from._impl_.objects_}
     , /*decltype(_impl_._cached_size_)*/{}};
 
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
@@ -1743,7 +1743,7 @@ inline void SC_BROADCAST_MOVE::SharedCtor(
   (void)arena;
   (void)is_message_owned;
   new (&_impl_) Impl_{
-      decltype(_impl_.players_){arena}
+      decltype(_impl_.objects_){arena}
     , /*decltype(_impl_._cached_size_)*/{}
   };
 }
@@ -1759,7 +1759,7 @@ SC_BROADCAST_MOVE::~SC_BROADCAST_MOVE() {
 
 inline void SC_BROADCAST_MOVE::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  _impl_.players_.~RepeatedPtrField();
+  _impl_.objects_.~RepeatedPtrField();
 }
 
 void SC_BROADCAST_MOVE::SetCachedSize(int size) const {
@@ -1772,7 +1772,7 @@ void SC_BROADCAST_MOVE::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  _impl_.players_.Clear();
+  _impl_.objects_.Clear();
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -1782,13 +1782,13 @@ const char* SC_BROADCAST_MOVE::_InternalParse(const char* ptr, ::_pbi::ParseCont
     uint32_t tag;
     ptr = ::_pbi::ReadTag(ptr, &tag);
     switch (tag >> 3) {
-      // repeated .Protocol.ObjectInfo players = 1;
+      // repeated .Protocol.MoveInfo objects = 1;
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 10)) {
           ptr -= 1;
           do {
             ptr += 1;
-            ptr = ctx->ParseMessage(_internal_add_players(), ptr);
+            ptr = ctx->ParseMessage(_internal_add_objects(), ptr);
             CHK_(ptr);
             if (!ctx->DataAvailable(ptr)) break;
           } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<10>(ptr));
@@ -1824,10 +1824,10 @@ uint8_t* SC_BROADCAST_MOVE::_InternalSerialize(
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // repeated .Protocol.ObjectInfo players = 1;
+  // repeated .Protocol.MoveInfo objects = 1;
   for (unsigned i = 0,
-      n = static_cast<unsigned>(this->_internal_players_size()); i < n; i++) {
-    const auto& repfield = this->_internal_players(i);
+      n = static_cast<unsigned>(this->_internal_objects_size()); i < n; i++) {
+    const auto& repfield = this->_internal_objects(i);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
         InternalWriteMessage(1, repfield, repfield.GetCachedSize(), target, stream);
   }
@@ -1848,9 +1848,9 @@ size_t SC_BROADCAST_MOVE::ByteSizeLong() const {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  // repeated .Protocol.ObjectInfo players = 1;
-  total_size += 1UL * this->_internal_players_size();
-  for (const auto& msg : this->_impl_.players_) {
+  // repeated .Protocol.MoveInfo objects = 1;
+  total_size += 1UL * this->_internal_objects_size();
+  for (const auto& msg : this->_impl_.objects_) {
     total_size +=
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(msg);
   }
@@ -1873,7 +1873,7 @@ void SC_BROADCAST_MOVE::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, cons
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  _this->_impl_.players_.MergeFrom(from._impl_.players_);
+  _this->_impl_.objects_.MergeFrom(from._impl_.objects_);
   _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
@@ -1891,7 +1891,7 @@ bool SC_BROADCAST_MOVE::IsInitialized() const {
 void SC_BROADCAST_MOVE::InternalSwap(SC_BROADCAST_MOVE* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  _impl_.players_.InternalSwap(&other->_impl_.players_);
+  _impl_.objects_.InternalSwap(&other->_impl_.objects_);
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata SC_BROADCAST_MOVE::GetMetadata() const {

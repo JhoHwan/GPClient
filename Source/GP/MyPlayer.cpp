@@ -45,18 +45,22 @@ void AMyPlayer::RequestMove(FVector Location)
     GameInstance->SendPakcet(ClientPacketHandler::MakeSendBuffer(pkt));
 }
 
-void AMyPlayer::SetTargetLocation(FVector Location)
+void AMyPlayer::SetTargetLocation(const Protocol::MoveInfo& info)
 {
-    bIsMoving = true;
-    Location.Z = GetActorLocation().Z;
-    TargetLocation = Location;
+	MoveInfo = info;
+	if (State == Protocol::PLAYER_STATE::PLAYER_STATE_IDLE)
+	{
+		State = Protocol::PLAYER_STATE::PLAYER_STATE_MOVE;
+		bIsMoving = true;
+	}
 }
-
 
 void AMyPlayer::MoveToTarget(float DeltaTime)
 {
     FVector CurrentLocation = GetActorLocation();
     
+	FVector TargetLocation = FVector(MoveInfo.objectinfo().x(), MoveInfo.objectinfo().y(), CurrentLocation.Z);
+
     FVector MoveDirection = (TargetLocation - CurrentLocation);
     float DistanceToTarget = MoveDirection.Size2D();
     MoveDirection = MoveDirection.GetSafeNormal2D();
@@ -75,8 +79,10 @@ void AMyPlayer::MoveToTarget(float DeltaTime)
 
     if (DistanceToTarget <= AcceptanceRadius)
     {
-        bIsMoving = false;
+		if (MoveInfo.state() == Protocol::PLAYER_STATE::PLAYER_STATE_IDLE)
+		{
+			State = Protocol::PLAYER_STATE::PLAYER_STATE_IDLE;
+			bIsMoving = false;
+		}
     }
 }
-
-

@@ -1544,25 +1544,25 @@ class SC_BROADCAST_MOVE final :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kPlayersFieldNumber = 1,
+    kObjectsFieldNumber = 1,
   };
-  // repeated .Protocol.ObjectInfo players = 1;
-  int players_size() const;
+  // repeated .Protocol.MoveInfo objects = 1;
+  int objects_size() const;
   private:
-  int _internal_players_size() const;
+  int _internal_objects_size() const;
   public:
-  void clear_players();
-  ::Protocol::ObjectInfo* mutable_players(int index);
-  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::ObjectInfo >*
-      mutable_players();
+  void clear_objects();
+  ::Protocol::MoveInfo* mutable_objects(int index);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::MoveInfo >*
+      mutable_objects();
   private:
-  const ::Protocol::ObjectInfo& _internal_players(int index) const;
-  ::Protocol::ObjectInfo* _internal_add_players();
+  const ::Protocol::MoveInfo& _internal_objects(int index) const;
+  ::Protocol::MoveInfo* _internal_add_objects();
   public:
-  const ::Protocol::ObjectInfo& players(int index) const;
-  ::Protocol::ObjectInfo* add_players();
-  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::ObjectInfo >&
-      players() const;
+  const ::Protocol::MoveInfo& objects(int index) const;
+  ::Protocol::MoveInfo* add_objects();
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::MoveInfo >&
+      objects() const;
 
   // @@protoc_insertion_point(class_scope:Protocol.SC_BROADCAST_MOVE)
  private:
@@ -1572,7 +1572,7 @@ class SC_BROADCAST_MOVE final :
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
   struct Impl_ {
-    ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::ObjectInfo > players_;
+    ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::MoveInfo > objects_;
     mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   };
   union { Impl_ _impl_; };
@@ -1994,41 +1994,41 @@ inline void CS_REQUEST_MOVE::set_y(double value) {
 
 // SC_BROADCAST_MOVE
 
-// repeated .Protocol.ObjectInfo players = 1;
-inline int SC_BROADCAST_MOVE::_internal_players_size() const {
-  return _impl_.players_.size();
+// repeated .Protocol.MoveInfo objects = 1;
+inline int SC_BROADCAST_MOVE::_internal_objects_size() const {
+  return _impl_.objects_.size();
 }
-inline int SC_BROADCAST_MOVE::players_size() const {
-  return _internal_players_size();
+inline int SC_BROADCAST_MOVE::objects_size() const {
+  return _internal_objects_size();
 }
-inline ::Protocol::ObjectInfo* SC_BROADCAST_MOVE::mutable_players(int index) {
-  // @@protoc_insertion_point(field_mutable:Protocol.SC_BROADCAST_MOVE.players)
-  return _impl_.players_.Mutable(index);
+inline ::Protocol::MoveInfo* SC_BROADCAST_MOVE::mutable_objects(int index) {
+  // @@protoc_insertion_point(field_mutable:Protocol.SC_BROADCAST_MOVE.objects)
+  return _impl_.objects_.Mutable(index);
 }
-inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::ObjectInfo >*
-SC_BROADCAST_MOVE::mutable_players() {
-  // @@protoc_insertion_point(field_mutable_list:Protocol.SC_BROADCAST_MOVE.players)
-  return &_impl_.players_;
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::MoveInfo >*
+SC_BROADCAST_MOVE::mutable_objects() {
+  // @@protoc_insertion_point(field_mutable_list:Protocol.SC_BROADCAST_MOVE.objects)
+  return &_impl_.objects_;
 }
-inline const ::Protocol::ObjectInfo& SC_BROADCAST_MOVE::_internal_players(int index) const {
-  return _impl_.players_.Get(index);
+inline const ::Protocol::MoveInfo& SC_BROADCAST_MOVE::_internal_objects(int index) const {
+  return _impl_.objects_.Get(index);
 }
-inline const ::Protocol::ObjectInfo& SC_BROADCAST_MOVE::players(int index) const {
-  // @@protoc_insertion_point(field_get:Protocol.SC_BROADCAST_MOVE.players)
-  return _internal_players(index);
+inline const ::Protocol::MoveInfo& SC_BROADCAST_MOVE::objects(int index) const {
+  // @@protoc_insertion_point(field_get:Protocol.SC_BROADCAST_MOVE.objects)
+  return _internal_objects(index);
 }
-inline ::Protocol::ObjectInfo* SC_BROADCAST_MOVE::_internal_add_players() {
-  return _impl_.players_.Add();
+inline ::Protocol::MoveInfo* SC_BROADCAST_MOVE::_internal_add_objects() {
+  return _impl_.objects_.Add();
 }
-inline ::Protocol::ObjectInfo* SC_BROADCAST_MOVE::add_players() {
-  ::Protocol::ObjectInfo* _add = _internal_add_players();
-  // @@protoc_insertion_point(field_add:Protocol.SC_BROADCAST_MOVE.players)
+inline ::Protocol::MoveInfo* SC_BROADCAST_MOVE::add_objects() {
+  ::Protocol::MoveInfo* _add = _internal_add_objects();
+  // @@protoc_insertion_point(field_add:Protocol.SC_BROADCAST_MOVE.objects)
   return _add;
 }
-inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::ObjectInfo >&
-SC_BROADCAST_MOVE::players() const {
-  // @@protoc_insertion_point(field_list:Protocol.SC_BROADCAST_MOVE.players)
-  return _impl_.players_;
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::MoveInfo >&
+SC_BROADCAST_MOVE::objects() const {
+  // @@protoc_insertion_point(field_list:Protocol.SC_BROADCAST_MOVE.objects)
+  return _impl_.objects_;
 }
 
 #ifdef __GNUC__

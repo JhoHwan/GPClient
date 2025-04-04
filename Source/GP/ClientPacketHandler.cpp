@@ -56,11 +56,12 @@ bool Handle_SC_BROADCAST_MOVE(SessionRef session, Protocol::SC_BROADCAST_MOVE& p
 {
 	auto* GameInstance = Cast<UGPGameInstance>(GWorld->GetGameInstance());
 
-	for (auto& info : pkt.players())
+	for (auto& info : pkt.objects())
 	{
-		auto* Player = GameInstance->GetPlayerWithId(info.objectid());
-		FVector pos(info.x(), info.y(), 0);
-		Player->SetTargetLocation(pos);
+		auto objectInfo = info.objectinfo();
+		auto* Player = GameInstance->GetPlayerWithId(objectInfo.objectid());
+
+		Player->SetTargetLocation(info);
 	}
 
 	return true;
