@@ -1,7 +1,7 @@
 #include "ClientPacketHandler.h"
 #include "PacketSession.h"
 #include "GPGameInstance.h"
-#include "MyPlayer.h"
+#include "GPPlayer.h"
 
 PacketHandlerFunc GPacketHandler[UINT16_MAX];
 

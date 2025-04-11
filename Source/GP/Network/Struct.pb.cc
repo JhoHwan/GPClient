@@ -26,6 +26,7 @@ PROTOBUF_CONSTEXPR ObjectInfo::ObjectInfo(
     /*decltype(_impl_.objectid_)*/uint64_t{0u}
   , /*decltype(_impl_.x_)*/0
   , /*decltype(_impl_.y_)*/0
+  , /*decltype(_impl_.z_)*/0
   , /*decltype(_impl_.rotate_)*/0
   , /*decltype(_impl_._cached_size_)*/{}} {}
 struct ObjectInfoDefaultTypeInternal {
@@ -66,6 +67,7 @@ const uint32_t TableStruct_Struct_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE(p
   PROTOBUF_FIELD_OFFSET(::Protocol::ObjectInfo, _impl_.objectid_),
   PROTOBUF_FIELD_OFFSET(::Protocol::ObjectInfo, _impl_.x_),
   PROTOBUF_FIELD_OFFSET(::Protocol::ObjectInfo, _impl_.y_),
+  PROTOBUF_FIELD_OFFSET(::Protocol::ObjectInfo, _impl_.z_),
   PROTOBUF_FIELD_OFFSET(::Protocol::ObjectInfo, _impl_.rotate_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::Protocol::MoveInfo, _internal_metadata_),
@@ -78,7 +80,7 @@ const uint32_t TableStruct_Struct_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE(p
 };
 static const ::_pbi::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   { 0, -1, -1, sizeof(::Protocol::ObjectInfo)},
-  { 10, -1, -1, sizeof(::Protocol::MoveInfo)},
+  { 11, -1, -1, sizeof(::Protocol::MoveInfo)},
 };
 
 static const ::_pb::Message* const file_default_instances[] = {
@@ -87,19 +89,19 @@ static const ::_pb::Message* const file_default_instances[] = {
 };
 
 const char descriptor_table_protodef_Struct_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
-  "\n\014Struct.proto\022\010Protocol\032\nEnum.proto\"D\n\n"
+  "\n\014Struct.proto\022\010Protocol\032\nEnum.proto\"O\n\n"
   "ObjectInfo\022\020\n\010objectId\030\001 \001(\004\022\t\n\001x\030\002 \001(\001\022"
-  "\t\n\001y\030\003 \001(\001\022\016\n\006rotate\030\004 \001(\001\"[\n\010MoveInfo\022("
-  "\n\nobjectInfo\030\001 \001(\0132\024.Protocol.ObjectInfo"
-  "\022%\n\005state\030\002 \001(\0162\026.Protocol.PLAYER_STATEb"
-  "\006proto3"
+  "\t\n\001y\030\003 \001(\001\022\t\n\001z\030\004 \001(\001\022\016\n\006rotate\030\005 \001(\001\"[\n"
+  "\010MoveInfo\022(\n\nobjectInfo\030\001 \001(\0132\024.Protocol"
+  ".ObjectInfo\022%\n\005state\030\002 \001(\0162\026.Protocol.PL"
+  "AYER_STATEb\006proto3"
   ;
 static const ::_pbi::DescriptorTable* const descriptor_table_Struct_2eproto_deps[1] = {
   &::descriptor_table_Enum_2eproto,
 };
 static ::_pbi::once_flag descriptor_table_Struct_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_Struct_2eproto = {
-    false, false, 207, descriptor_table_protodef_Struct_2eproto,
+    false, false, 218, descriptor_table_protodef_Struct_2eproto,
     "Struct.proto",
     &descriptor_table_Struct_2eproto_once, descriptor_table_Struct_2eproto_deps, 1, 2,
     schemas, file_default_instances, TableStruct_Struct_2eproto::offsets,
@@ -133,6 +135,7 @@ ObjectInfo::ObjectInfo(const ObjectInfo& from)
       decltype(_impl_.objectid_){}
     , decltype(_impl_.x_){}
     , decltype(_impl_.y_){}
+    , decltype(_impl_.z_){}
     , decltype(_impl_.rotate_){}
     , /*decltype(_impl_._cached_size_)*/{}};
 
@@ -151,6 +154,7 @@ inline void ObjectInfo::SharedCtor(
       decltype(_impl_.objectid_){uint64_t{0u}}
     , decltype(_impl_.x_){0}
     , decltype(_impl_.y_){0}
+    , decltype(_impl_.z_){0}
     , decltype(_impl_.rotate_){0}
     , /*decltype(_impl_._cached_size_)*/{}
   };
@@ -215,9 +219,17 @@ const char* ObjectInfo::_InternalParse(const char* ptr, ::_pbi::ParseContext* ct
         } else
           goto handle_unusual;
         continue;
-      // double rotate = 4;
+      // double z = 4;
       case 4:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 33)) {
+          _impl_.z_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
+          ptr += sizeof(double);
+        } else
+          goto handle_unusual;
+        continue;
+      // double rotate = 5;
+      case 5:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 41)) {
           _impl_.rotate_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
           ptr += sizeof(double);
         } else
@@ -278,14 +290,24 @@ uint8_t* ObjectInfo::_InternalSerialize(
     target = ::_pbi::WireFormatLite::WriteDoubleToArray(3, this->_internal_y(), target);
   }
 
-  // double rotate = 4;
+  // double z = 4;
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_z = this->_internal_z();
+  uint64_t raw_z;
+  memcpy(&raw_z, &tmp_z, sizeof(tmp_z));
+  if (raw_z != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteDoubleToArray(4, this->_internal_z(), target);
+  }
+
+  // double rotate = 5;
   static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
   double tmp_rotate = this->_internal_rotate();
   uint64_t raw_rotate;
   memcpy(&raw_rotate, &tmp_rotate, sizeof(tmp_rotate));
   if (raw_rotate != 0) {
     target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteDoubleToArray(4, this->_internal_rotate(), target);
+    target = ::_pbi::WireFormatLite::WriteDoubleToArray(5, this->_internal_rotate(), target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -327,7 +349,16 @@ size_t ObjectInfo::ByteSizeLong() const {
     total_size += 1 + 8;
   }
 
-  // double rotate = 4;
+  // double z = 4;
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_z = this->_internal_z();
+  uint64_t raw_z;
+  memcpy(&raw_z, &tmp_z, sizeof(tmp_z));
+  if (raw_z != 0) {
+    total_size += 1 + 8;
+  }
+
+  // double rotate = 5;
   static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
   double tmp_rotate = this->_internal_rotate();
   uint64_t raw_rotate;
@@ -370,6 +401,13 @@ void ObjectInfo::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PRO
   memcpy(&raw_y, &tmp_y, sizeof(tmp_y));
   if (raw_y != 0) {
     _this->_internal_set_y(from._internal_y());
+  }
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_z = from._internal_z();
+  uint64_t raw_z;
+  memcpy(&raw_z, &tmp_z, sizeof(tmp_z));
+  if (raw_z != 0) {
+    _this->_internal_set_z(from._internal_z());
   }
   static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
   double tmp_rotate = from._internal_rotate();

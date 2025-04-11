@@ -7,7 +7,7 @@
 #include "Serialization/ArrayWriter.h"
 #include "SocketSubsystem.h"
 #include "PacketSession.h"
-#include "MyPlayer.h"
+#include "GPPlayer.h"
 
 #include "Protocol.pb.h"
 #include "ClientPacketHandler.h"
@@ -105,12 +105,12 @@ void UGPGameInstance::HandleSpawn(const Protocol::ObjectInfo& PlayerInfo)
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
-	FVector SpawnLocation(PlayerInfo.x(), PlayerInfo.y(), 140);
+	FVector SpawnLocation(PlayerInfo.x(), PlayerInfo.y(), PlayerInfo.z() + 88);
 
 	AActor* Actor = World->SpawnActor<AActor>(PlayerClass, SpawnLocation, FRotator::ZeroRotator, SpawnParams);
 	if (Actor == nullptr) return;
 
-	AMyPlayer* player = Cast<AMyPlayer>(Actor);
+	AGPPlayer* player = Cast<AGPPlayer>(Actor);
 	if (player == nullptr) return;
 	player->SetPlayerId(ObjectId);
 
@@ -127,7 +127,7 @@ void UGPGameInstance::HandleSpawn(const Protocol::SC_ENTER_GAME& EnterGame)
 	APlayerController* PC = GetWorld()->GetFirstPlayerController();
 	if (PC == nullptr) return;
 
-	MyPlayer = Cast<AMyPlayer>(Player);
+	MyPlayer = Cast<AGPPlayer>(Player);
 	if (MyPlayer == nullptr) return;
 
 	PC->Possess(MyPlayer);
@@ -137,14 +137,14 @@ void UGPGameInstance::HandleSpawn(const Protocol::SC_SPAWN& SpawnGame)
 {
 }
 
-AMyPlayer* UGPGameInstance::GetPlayerWithId(uint64 Id)
+AGPPlayer* UGPGameInstance::GetPlayerWithId(uint64 Id)
 {
 	if (Players.Find(Id) == nullptr)
 		return nullptr;
 	return Players[Id];
 }
 
-AMyPlayer* UGPGameInstance::GetMyPlayer()
+AGPPlayer* UGPGameInstance::GetMyPlayer()
 {
 	return MyPlayer;
 }

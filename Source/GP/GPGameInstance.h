@@ -10,7 +10,7 @@
 /**
  * 
  */
-class AMyPlayer;
+class AGPPlayer;
 
 UCLASS()
 class GP_API UGPGameInstance : public UGameInstance
@@ -44,13 +44,13 @@ public:
 
 	TSharedPtr<class PacketSession> GameServerSession;
 
-	AMyPlayer* GetPlayerWithId(uint64 Id);
-	AMyPlayer* GetMyPlayer();
+	AGPPlayer* GetPlayerWithId(uint64 Id);
+	AGPPlayer* GetMyPlayer();
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<AActor> PlayerClass;
 
-	TMap<uint32, AMyPlayer*> Players;
-	AMyPlayer* MyPlayer;
+	TMap<uint32, AGPPlayer*> Players;
+	AGPPlayer* MyPlayer;
 };

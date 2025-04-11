@@ -24,7 +24,8 @@ enum : uint16
 	PKT_CS_CHAT = 1006,
 	PKT_SC_CHAT = 1007,
 	PKT_CS_REQUEST_MOVE = 1008,
-	PKT_SC_BROADCAST_MOVE = 1009,
+	PKT_CS_REQUEST_STOP = 1009,
+	PKT_SC_BROADCAST_MOVE = 1010,
 };
 
 // Custom Handlers
@@ -60,6 +61,7 @@ public:
 	static SendBufferRef MakeSendBuffer(Protocol::CS_LEAVE_GAME& pkt) { return MakeSendBuffer(pkt, PKT_CS_LEAVE_GAME); }
 	static SendBufferRef MakeSendBuffer(Protocol::CS_CHAT& pkt) { return MakeSendBuffer(pkt, PKT_CS_CHAT); }
 	static SendBufferRef MakeSendBuffer(Protocol::CS_REQUEST_MOVE& pkt) { return MakeSendBuffer(pkt, PKT_CS_REQUEST_MOVE); }
+	static SendBufferRef MakeSendBuffer(Protocol::CS_REQUEST_STOP& pkt) { return MakeSendBuffer(pkt, PKT_CS_REQUEST_STOP); }
 
 private:
 	template<typename PacketType, typename ProcessFunc>

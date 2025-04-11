@@ -185,7 +185,8 @@ class ObjectInfo final :
     kObjectIdFieldNumber = 1,
     kXFieldNumber = 2,
     kYFieldNumber = 3,
-    kRotateFieldNumber = 4,
+    kZFieldNumber = 4,
+    kRotateFieldNumber = 5,
   };
   // uint64 objectId = 1;
   void clear_objectid();
@@ -214,7 +215,16 @@ class ObjectInfo final :
   void _internal_set_y(double value);
   public:
 
-  // double rotate = 4;
+  // double z = 4;
+  void clear_z();
+  double z() const;
+  void set_z(double value);
+  private:
+  double _internal_z() const;
+  void _internal_set_z(double value);
+  public:
+
+  // double rotate = 5;
   void clear_rotate();
   double rotate() const;
   void set_rotate(double value);
@@ -234,6 +244,7 @@ class ObjectInfo final :
     uint64_t objectid_;
     double x_;
     double y_;
+    double z_;
     double rotate_;
     mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   };
@@ -479,7 +490,27 @@ inline void ObjectInfo::set_y(double value) {
   // @@protoc_insertion_point(field_set:Protocol.ObjectInfo.y)
 }
 
-// double rotate = 4;
+// double z = 4;
+inline void ObjectInfo::clear_z() {
+  _impl_.z_ = 0;
+}
+inline double ObjectInfo::_internal_z() const {
+  return _impl_.z_;
+}
+inline double ObjectInfo::z() const {
+  // @@protoc_insertion_point(field_get:Protocol.ObjectInfo.z)
+  return _internal_z();
+}
+inline void ObjectInfo::_internal_set_z(double value) {
+  
+  _impl_.z_ = value;
+}
+inline void ObjectInfo::set_z(double value) {
+  _internal_set_z(value);
+  // @@protoc_insertion_point(field_set:Protocol.ObjectInfo.z)
+}
+
+// double rotate = 5;
 inline void ObjectInfo::clear_rotate() {
   _impl_.rotate_ = 0;
 }
